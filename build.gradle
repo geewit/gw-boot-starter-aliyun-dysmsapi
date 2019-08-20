@@ -5,6 +5,7 @@ dependencies {
     compile("org.slf4j:slf4j-api:$slf4j_version") {
         exclude group: 'org.slf4j', module: 'logback'
     }
+    compile("org.apache.commons:commons-lang3:$commons_lang3_version")
     compile("com.aliyun:aliyun-java-sdk-core:$aliyun_java_sdk_core_version")
     compile("com.aliyun:aliyun-java-sdk-dysmsapi:$aliyun_java_sdk_dysmsapi_version")
     compile("org.springframework.boot:spring-boot:$spring_boot_version")
@@ -12,7 +13,6 @@ dependencies {
     compileOnly("org.springframework.boot:spring-boot-configuration-processor:$spring_boot_version")
 
     compile("io.geewit.boot:gw-boot-starter-aliyun:$gw_boot_starter_aliyun_version")
-    compile("org.apache.commons:commons-lang3:$commons_lang3_version")
     compile("io.geewit.utils.core:gw-core-uuid-utils:$gw_utils_version")
     compile("io.geewit.utils.web:gw-web-utils:$gw_utils_version")
 }
