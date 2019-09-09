@@ -1,10 +1,11 @@
 package io.geewit.boot.aliyun.dysms.service;
 
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
-import com.aliyuncs.dysmsapi.model.v20170525.SendSmsRequest;
-import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import io.geewit.boot.aliyun.AliyunProperties;
@@ -15,17 +16,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.List;
 import java.util.Map;
 
 @Configuration
 public class SmsSender {
     private final static Logger logger = LoggerFactory.getLogger(SmsSender.class);
-
-    //产品名称:云通信短信API产品,开发者无需替换
-    private static final String product = "Dysmsapi";
-    //产品域名,开发者无需替换
-//    private static final String domain = "dysmsapi.aliyuncs.com";
 
     private final AliyunProperties properties;
 
@@ -37,7 +34,7 @@ public class SmsSender {
     }
 
     @SuppressWarnings({"unused"})
-    public SendSmsResponse sendSms(String templateCode, Map<String, String> params, List<String> receivers) throws ClientException {
+    public CommonResponse sendSms(String templateCode, Map<String, String> params, List<String> receivers) throws ClientException {
         String regionId = aliyunDySmsProperties.getRegionId();
         logger.debug("regionId : " + regionId);
 
@@ -45,40 +42,36 @@ public class SmsSender {
         logger.debug("endpoint : " + endpoint);
         //hint 此处可能会抛出异常，注意catch
         IClientProfile profile = DefaultProfile.getProfile(regionId, properties.getKey(), properties.getSecret());
-        DefaultProfile.addEndpoint(regionId, product, endpoint);
         IAcsClient acsClient = new DefaultAcsClient(profile);
         //组装请求对象-具体描述见控制台-文档部分内容
-        SendSmsRequest request = new SendSmsRequest();
-        String phoneNumbers = StringUtils.join(receivers.toArray(), ",");
-        logger.debug("phoneNumbers : " + phoneNumbers);
-        request.setPhoneNumbers(phoneNumbers);
-
-
-
-
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain(endpoint);
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", regionId);
         //必填:短信签名-可在短信控制台中找到
         String sign = aliyunDySmsProperties.getSign();
         logger.debug("sign : " + sign);
-        request.setSignName(sign);
-
+        request.putQueryParameter("SignName", sign);
         //必填:短信模板-可在短信控制台中找到
         logger.debug("templateCode : " + templateCode);
-        request.setTemplateCode(templateCode);
+        request.putQueryParameter("TemplateCode", templateCode);
+
+        String phoneNumbers = StringUtils.join(receivers.toArray(), ",");
+        logger.debug("phoneNumbers : " + phoneNumbers);
+        request.putQueryParameter("PhoneNumbers", phoneNumbers);
 
         //可选:模板中的变量替换JSON串,如模板内容为 json
         String templateParam = JsonUtils.toJson(params);
         logger.debug("templateParam : " + templateParam);
-        request.setTemplateParam(templateParam);
-
+        request.putQueryParameter("TemplateParam", templateParam);
         String outId = UUIDUtils.randomUUID();
         logger.debug("outId : " + outId);
-        request.setOutId(outId);
-
-        //hint 此处可能会抛出异常，注意catch
-        SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-        logger.info("sendSmsResponse : " + JsonUtils.toJson(sendSmsResponse));
-
-        return sendSmsResponse;
+        request.putQueryParameter("OutId", outId);
+        CommonResponse response = acsClient.getCommonResponse(request);
+        logger.debug("response : " + response.getData());
+        return response;
     }
 
 
