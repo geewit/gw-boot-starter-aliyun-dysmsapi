@@ -14,5 +14,6 @@ dependencies {
     compile("io.geewit.boot:gw-boot-starter-aliyun:$gw_boot_starter_aliyun_version")
     compile("io.geewit.utils.core:gw-core-uuid-utils:$gw_utils_version")
     compile("io.geewit.utils.web:gw-web-utils:$gw_utils_version")
+    testCompile("junit:junit:$junit_version")
 }
 

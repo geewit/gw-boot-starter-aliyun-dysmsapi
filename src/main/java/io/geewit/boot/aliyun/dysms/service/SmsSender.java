@@ -74,42 +74,4 @@ public class SmsSender {
         return response;
     }
 
-
-//    public static void main(String[] args) {
-//        String regionId = "cn-shanghai";
-//        String endpoint = "cn-shanghai";
-//        String sign = "上海激智信息技术有限公司";
-//        String tempalteCode = "SMS_63410150";
-//        IClientProfile profile = DefaultProfile.getProfile(regionId, "rviOaWhKvz80REXD", "u0yr8DUenFgKz9eNG94ZljMQMC7MLP");
-//        try {
-//            DefaultProfile.addEndpoint(endpoint, regionId, "Dysmsapi", "dysmsapi.aliyuncs.com");
-//
-//            IAcsClient acsClient = new DefaultAcsClient(profile);
-//            ImmutableMap.Builder<String, String> paramsBuilder = ImmutableMap.builder();
-//            paramsBuilder.put("customer", "test");
-//            paramsBuilder.put("code", String.valueOf(RandomUtils.nextInt(100000, 999999)));
-//            paramsBuilder.put("product", "保存委托卖单");
-//            Map<String, String> params = paramsBuilder.build();
-//            SendSmsRequest request = new SendSmsRequest();
-//            request.setPhoneNumbers("13917848143");
-//
-//            //必填:短信签名-可在短信控制台中找到
-//            request.setSignName(sign);
-//
-//            //必填:短信模板-可在短信控制台中找到
-//            request.setTemplateCode(tempalteCode);
-//
-//            //可选:模板中的变量替换JSON串,如模板内容为 json
-//            request.setTemplateParam(JsonUtils.toJson(params));
-//
-//            request.setOutId(UUID.randomUUID().toString());
-//
-//            //hint 此处可能会抛出异常，注意catch
-//            SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-//            System.out.println("response: " + JsonUtils.toJson(sendSmsResponse));
-//        } catch (ClientException e) {
-//            System.out.println("ErrCode: " + e.getErrCode());
-//            e.printStackTrace();
-//        }
-//    }
 }
